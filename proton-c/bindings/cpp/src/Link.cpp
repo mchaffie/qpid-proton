@@ -36,7 +36,7 @@ namespace reactor {
 namespace {
 
 static inline void throwIfNull(pn_link_t *l) { if (!l) throw ProtonException(MSG("Disassociated link")); }
-    
+
 }
 
 template class ProtonHandle<pn_link_t>;
@@ -48,7 +48,7 @@ Link::Link(pn_link_t* p) {
     if (p) senderLink = pn_link_is_sender(p);
 }
 Link::Link() {
-    PI::ctor(*this, 0); 
+    PI::ctor(*this, 0);
 }
 Link::Link(const Link& c) : ProtonHandle<pn_link_t>() {
     verifyType(impl);
