@@ -18,7 +18,9 @@ under the License.
 */
 
 // Tests to verify that example code behaves as expected.
-package messaging
+// Run in this directory with `go test example_test.go`
+//
+package main
 
 import (
 	"bufio"
@@ -77,8 +79,8 @@ func (b *broker) check() error {
 func (b *broker) start() error {
 	build("event/broker.go")
 	if b.cmd == nil { // Not already started
-		// FIXME aconway 2015-04-30: better way to pick/configure a broker address.
-		b.addr = fmt.Sprintf(":%d", rand.Intn(10000)+10000)
+		// FIXME aconway 2015-04-30: better way to pick/configure a broker port.
+		b.addr = fmt.Sprintf("127.0.0.1:%d", rand.Intn(10000)+10000)
 		b.cmd = exec.Command(exepath("broker"), "-addr", b.addr, "-verbose", "0")
 		b.runerr = make(chan error)
 		// Change the -verbose setting above to see broker output on stdout/stderr.
@@ -98,7 +100,6 @@ func (b *broker) stop() {
 	}
 }
 
-// FIXME aconway 2015-04-30: redo all assert/panic tests with checkEqual style.
 func checkEqual(want interface{}, got interface{}) error {
 	if reflect.DeepEqual(want, got) {
 		return nil
@@ -256,13 +257,16 @@ func build(prog string) {
 }
 
 func TestMain(m *testing.M) {
+	rand.Seed(time.Now().UTC().UnixNano())
 	var err error
-	exampleDir, err = filepath.Abs("../../../../../../../examples/go")
+	exampleDir, err = filepath.Abs(".")
 	panicIf(err)
 	binDir, err = ioutil.TempDir("", "example_test.go")
 	panicIf(err)
 	defer os.Remove(binDir) // Clean up binaries
 	testBroker = &broker{}  // Broker is started on-demand by tests.
-	defer testBroker.stop()
-	os.Exit(m.Run())
+	testBroker.stop()
+	status := m.Run()
+	testBroker.stop()
+	os.Exit(status)
 }

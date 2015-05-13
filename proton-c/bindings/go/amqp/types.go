@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 */
 
-package proton
+package amqp
 
 // #include <proton/codec.h>
 // const pn_type_t PN_DATA_TYPE_ERROR = (pn_type_t) -1;

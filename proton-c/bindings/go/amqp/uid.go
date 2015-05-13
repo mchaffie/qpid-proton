@@ -17,22 +17,24 @@ specific language governing permissions and limitations
 under the License.
 */
 
-/*
-Package event provides a low-level API to the proton AMQP engine.
+// Generating unique IDs for various things.
 
-For most tasks, consider instead package qpid.apache.org/proton/messaging.
-It provides a higher-level, concurrent API that is easier to use.
+package amqp
 
-The API is event based. There are two alternative styles of handler. EventHandler
-provides the core proton events. MessagingHandler provides a slighly simplified
-view of the event stream and automates some common tasks.
+import (
+	"strconv"
+	"sync/atomic"
+)
 
-See type Pump documentation for more details of the interaction between proton
-events and goroutines.
-*/
-package event
+// A simple atomic counter to generate unique 64 bit IDs.
+type UidCounter struct{ count uint64 }
 
-// #cgo LDFLAGS: -lqpid-proton
-import "C"
+// NextInt gets the next uint64 value from the atomic counter.
+func (uc *UidCounter) NextInt() uint64 {
+	return atomic.AddUint64(&uc.count, 1)
+}
 
-// This file is just for the package comment.
+// Next gets the next integer value encoded as a base32 string, safe for NUL terminated C strings.
+func (uc *UidCounter) Next() string {
+	return strconv.FormatUint(uc.NextInt(), 32)
+}

@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 */
 
-package proton
+package amqp
 
 // #include <proton/types.h>
 // #include <proton/message.h>
@@ -25,7 +25,7 @@ package proton
 import "C"
 
 import (
-	"qpid.apache.org/proton/internal"
+	"qpid.apache.org/proton/go/internal"
 	"time"
 	"unsafe"
 )

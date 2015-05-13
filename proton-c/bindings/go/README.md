@@ -9,6 +9,9 @@ early feedback can guide development.
 - Email <proton@qpid.apache.org>
 - Create issues <https://issues.apache.org/jira/browse/PROTON>, attach patches to an issue.
 
+There are working [examples](../../../examples/go/README.md) and the examples README file
+explains how to install the packages in your go workspace and read the documentation.
+
 ## Goals
 
 The API should
@@ -30,18 +33,23 @@ There are two types of developer we want to support
 
 ## Status
 
-Package proton encodes and decodes AMQP messages and data as Go types.
+There are 3 go packages for proton:
 
-Sub-packages 'event' and 'messaging' provide two alternative ways to write
-AMQP clients and servers. 'messaging' is easier for general purpose use. 'event'
-gives complete low-level control of the underlying proton C engine.
+- qpid.apache.org/proton/go/amqp: converts AMQP messages and data types to and from Go data types.
+- qpid.apache.org/proton/go/messaging: easy-to-use, concurrent API for messaging clients and servers.
+- qpid.apache.org/proton/go/event: full low-level access to the proton engine.
 
-The event package is fairly complete, with the exception of the proton
+Most applications should use the `messaging` package. The `event` package is for
+applications that need low-level access to the proton engine.
+
+The `event` package is fairly complete, with the exception of the proton
 reactor. It's unclear if the reactor is important for go.
 
-The messaging package is just starting. The examples work but anything else might not.
+The `messaging` package can run the examples but probably not much else. There
+is work to do on error handling and the API may change.
 
-There are working [examples](../../../examples/go) of a broker, sender and receiver.
+There are working [examples](../../../examples/go/README.md) of a broker using `event` and
+a sender and receiver using `messaging`.
 
 ## The event driven API
 
@@ -59,44 +67,6 @@ See the package documentation for emerging details.
 Currently using a channel to receive messages, a function to send them (channels
 internally) and a channel as a "future" for acknowledgements to senders. This
 may change.
-
-## Design Questions
-
-
-1. Error reporting and handling, esp. async. errors:
-
-What are common patterns for handling errors across channels?  I.e. the thing at
-one end of the channel blows up, how do you tell the other end?
-
-readers: you can close the channel, but there's no error info. You could pass a
-struct { data, error } or use a second channel. Pros & cons?
-
-writers: you can't close without a panic so you need a second channel.  Is this
-a normal pattern:
-
-    select {
-        data -> sendChan: sentit()
-        err := <- errChan: oops(err)
-    }
-
-2. Use of channels:
-
-I recently saw an interesting Go tip: "Make your API synchronous because in Go
-it is simple to make a sync call async by putting it in a goroutine."
-
-What are the tradeoffs of exposing channels directly in the API vs. hiding them
-behind methods? Exposing lets users select directly, less overhead than starting
-a goroutine, creating MORE channels and selecting those. Hiding lets us wrap
-patterns like the 'select {data, err}' pattern above, which is easier and less
-error prone than asking users to do it themselves.
-
-The standard net.Conn uses blocking methods, not channels. I did as the tip says
-and wrapped them in goroutines and channels. The library does expose *read*
-channels e.g. time.After. Are there any *write* channels in the standard
-library? I note that time.After has no errors, and suspect that may be a key
-factor in the descison.
-
-3. The "future" pattern for acknowledgements: super easy in Go but depends on 1. and 2. above.
 
 ## Why a separate API for Go?
 
@@ -157,33 +127,6 @@ have simple loops that block channels till messages are available, the user can
 start as many or as few such goroutines as they wish to implement concurrency as
 simple or as complex as they wish. For example blocking request-response
 vs. asynchronous flows of messages and acknowledgments.
-
-
-## Layout
-
-This directory is a [Go work-space](http://golang.org/doc/code.html), it is not
-yet connected to the rest of the proton build.
-
-To experiment, install proton in a standard place or set these environment
-variables: `PATH`, `C_INCLUDE_PATH`, `LIBRARY_PATH` and `LD_LIBRARY_PATH`.
-
-Add this directory to `GOPATH` for the Go tools.
-
-To see the docs as text:
-
-    godoc apache.org/proton
-
-To see them in your browser run this in the background and open
-http://localhost:6060 in your browser:
-
-    godoc -http=:6060 -index=true&
-
-Click "Packages" and "proton" to see the proton docs. It takes a minute or two
-to generate the index so search may not work immediately.
-
-To run the unit tests:
-
-    go test -a apache.org/proton
 
 ## New to Go?
 

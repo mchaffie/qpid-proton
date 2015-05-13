@@ -17,35 +17,24 @@ specific language governing permissions and limitations
 under the License.
 */
 
-package proton
+/*
+Package amqp encodes and decodes AMQP messages and data as Go types.
 
-import (
-	"fmt"
-)
+It follows the standard 'encoding' libraries pattern. The mapping between AMQP
+and Go types is described in the documentation of the Marshal and Unmarshal
+functions.
 
-func ExampleParseURL() {
-	for _, s := range []string{
-		"amqp://username:password@host:1234/path",
-		"host:1234",
-		"host",
-		":1234",
-		"host/path",
-		"amqps://host",
-		"",
-	} {
-		u, err := ParseURL(s)
-		if err != nil {
-			fmt.Println(err)
-		} else {
-			fmt.Println(u)
-		}
-	}
-	// Output:
-	// amqp://username:password@host:1234/path
-	// amqp://host:1234
-	// amqp://host:amqp
-	// amqp://:1234
-	// amqp://host:amqp/path
-	// amqps://host:amqps
-	// proton: bad URL ""
-}
+The sub-packages 'event' and 'messaging' provide two alternative ways to write
+AMQP clients and servers. 'messaging' is easier for general purpose use. 'event'
+gives complete low-level control of the underlying proton C engine.
+
+AMQP is an open standard for inter-operable message exchange, see <http://www.amqp.org/>
+*/
+package amqp
+
+// #cgo LDFLAGS: -lqpid-proton
+import "C"
+
+// This file is just for the package comment.
+
+// FIXME aconway 2015-04-28: need to re-organize the package, it's not very intuitive.

@@ -24,7 +24,7 @@ under the License.
 package event
 
 import (
-	"qpid.apache.org/proton/internal"
+	"qpid.apache.org/proton/go/internal"
 	"time"
 	"unsafe"
 )

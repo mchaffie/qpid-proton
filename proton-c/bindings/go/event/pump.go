@@ -36,7 +36,7 @@ import (
 	"fmt"
 	"io"
 	"net"
-	"qpid.apache.org/proton/internal"
+	"qpid.apache.org/proton/go/internal"
 	"sync"
 	"unsafe"
 )
@@ -95,7 +95,7 @@ Pump.Close() will take care of cleaning up any remaining values and types when
 you are done with the Pump. All values associated with a pump become invalid
 when you call Pump.Close()
 
-The qpid.apache.org/proton/messaging package will do all this for you, so unless
+The qpid.apache.org/proton/go/messaging package will do all this for you, so unless
 you are doing something fairly low-level it is probably a better choice.
 
 */

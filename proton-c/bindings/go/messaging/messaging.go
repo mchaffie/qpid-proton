@@ -24,8 +24,8 @@ import "C"
 
 import (
 	"net"
-	"qpid.apache.org/proton"
-	"qpid.apache.org/proton/event"
+	"qpid.apache.org/proton/go/amqp"
+	"qpid.apache.org/proton/go/event"
 )
 
 // Connection is a connection to a remote AMQP endpoint.
@@ -153,7 +153,7 @@ func (c *Connection) Receiver(addr string) (r Receiver, err error) {
 			link.Open()
 		}
 		// FIXME aconway 2015-04-29: hack to avoid blocking, need proper buffering linked to flow control
-		rchan := make(chan proton.Message, 1000)
+		rchan := make(chan amqp.Message, 1000)
 		c.handler.receivers[link] = rchan
 		result <- Receiver{Link{c, link}, rchan}
 	}
@@ -161,7 +161,7 @@ func (c *Connection) Receiver(addr string) (r Receiver, err error) {
 }
 
 // FIXME aconway 2015-04-29: counter per session.
-var linkNames proton.UidCounter
+var linkNames amqp.UidCounter
 
 // Session is an AMQP session, it contains Senders and Receivers.
 // Every Connection has a DefaultSession, you can create additional sessions
@@ -221,7 +221,7 @@ type Sender struct {
 
 // Send sends a message. If d is not nil, the disposition is retured on d.
 // If d is nil the message is sent pre-settled and no disposition is returned.
-func (s *Sender) Send(m proton.Message) (ack Acknowledgement, err error) {
+func (s *Sender) Send(m amqp.Message) (ack Acknowledgement, err error) {
 	ackChan := make(chan Disposition, 1)
 	ack = ackChan
 	s.connection.pump.Inject <- func() {
@@ -241,7 +241,7 @@ func (s *Sender) Close() error { return nil } // FIXME aconway 2015-04-27: close
 type Receiver struct {
 	Link
 	// Channel of messag
-	Receive <-chan proton.Message
+	Receive <-chan amqp.Message
 }
 
 // FIXME aconway 2015-04-29: settlement - ReceivedMessage with Settle() method?

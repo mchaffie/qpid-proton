@@ -20,7 +20,7 @@ under the License.
 // Test that conversion of Go type to/from AMQP is compatible with other
 // bindings.
 //
-package proton
+package amqp
 
 import (
 	"bytes"
@@ -46,7 +46,7 @@ func assertNil(err interface{}) {
 }
 
 func getReader(name string) (r io.Reader) {
-	r, err := os.Open("../../../../../../tests/interop/" + name + ".amqp")
+	r, err := os.Open("interop/" + name + ".amqp")
 	if err != nil {
 		panic(fmt.Errorf("Can't open %#v: %v", name, err))
 	}

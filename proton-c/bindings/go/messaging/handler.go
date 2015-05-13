@@ -20,14 +20,14 @@ under the License.
 package messaging
 
 import (
-	"qpid.apache.org/proton"
-	"qpid.apache.org/proton/event"
+	"qpid.apache.org/proton/go/amqp"
+	"qpid.apache.org/proton/go/event"
 )
 
 // FIXME aconway 2015-04-28: cleanup - exposing delivery vs. disposition.
 
 type acksMap map[event.Delivery]chan Disposition
-type receiverMap map[event.Link]chan proton.Message
+type receiverMap map[event.Link]chan amqp.Message
 
 type handler struct {
 	connection *Connection

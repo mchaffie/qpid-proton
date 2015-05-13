@@ -24,7 +24,7 @@ package event
 import "C"
 
 import (
-	"qpid.apache.org/proton/internal"
+	"qpid.apache.org/proton/go/internal"
 )
 
 // EventHandler handles core proton events.
@@ -125,7 +125,7 @@ const (
 	// The peer has settled the outgoing message. This is the point at which it
 	// shouod never be retransmitted.
 	MSettled
-	// A message is received. Call proton.EventMessage(Event) to get the message.
+	// A message is received. Call DecodeMessage() to decode as an amqp.Message.
 	// To manage the outcome of this messages (e.g. to accept or reject the message)
 	// use Event.Delivery().
 	MMessage

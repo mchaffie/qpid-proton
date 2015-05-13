@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 */
 
-package proton
+package amqp
 
 // #include <proton/codec.h>
 import "C"
@@ -26,7 +26,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"qpid.apache.org/proton/internal"
+	"qpid.apache.org/proton/go/internal"
 	"reflect"
 	"unsafe"
 )

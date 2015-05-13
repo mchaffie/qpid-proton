@@ -33,7 +33,7 @@ import "C"
 
 import (
 	"fmt"
-	"qpid.apache.org/proton/internal"
+	"qpid.apache.org/proton/go/internal"
 	"unsafe"
 )
 
@@ -68,7 +68,7 @@ func (e Event) Delivery() Delivery     { return e.delivery }
 func (e Event) String() string         { return e.Type().String() }
 
 // Data holds a pointer to decoded AMQP data.
-// Use proton.marshal/unmarshal to access it as Go data types.
+// Use amqp.marshal/unmarshal to access it as Go data types.
 //
 type Data struct{ pn *C.pn_data_t }
 

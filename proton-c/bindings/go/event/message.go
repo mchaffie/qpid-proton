@@ -25,12 +25,12 @@ package event
 import "C"
 
 import (
-	"qpid.apache.org/proton"
-	"qpid.apache.org/proton/internal"
+	"qpid.apache.org/proton/go/amqp"
+	"qpid.apache.org/proton/go/internal"
 )
 
 // DecodeMessage decodes the message containined in a delivery event.
-func DecodeMessage(e Event) (m proton.Message, err error) {
+func DecodeMessage(e Event) (m amqp.Message, err error) {
 	defer internal.DoRecover(&err)
 	delivery := e.Delivery()
 	if !delivery.Readable() || delivery.Partial() {
@@ -41,15 +41,15 @@ func DecodeMessage(e Event) (m proton.Message, err error) {
 	if result != len(data) {
 		return nil, internal.Errorf("cannot receive message: %s", internal.PnErrorCode(result))
 	}
-	return proton.DecodeMessage(data)
+	return amqp.DecodeMessage(data)
 }
 
 // FIXME aconway 2015-04-08: proper handling of delivery tags. Tag counter per link.
-var tags proton.UidCounter
+var tags amqp.UidCounter
 
-// Send sends a proton.Message over a Link.
+// Send sends a amqp.Message over a Link.
 // Returns a Delivery that can be use to determine the outcome of the message.
-func (link Link) Send(m proton.Message) (Delivery, error) {
+func (link Link) Send(m amqp.Message) (Delivery, error) {
 	if !link.IsSender() {
 		return Delivery{}, internal.Errorf("attempt to send message on receiving link")
 	}

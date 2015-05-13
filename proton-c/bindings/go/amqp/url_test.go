@@ -17,24 +17,35 @@ specific language governing permissions and limitations
 under the License.
 */
 
-// Generating unique IDs for various things.
-
-package proton
+package amqp
 
 import (
-	"strconv"
-	"sync/atomic"
+	"fmt"
 )
 
-// A simple atomic counter to generate unique 64 bit IDs.
-type UidCounter struct{ count uint64 }
-
-// NextInt gets the next uint64 value from the atomic counter.
-func (uc *UidCounter) NextInt() uint64 {
-	return atomic.AddUint64(&uc.count, 1)
-}
-
-// Next gets the next integer value encoded as a base32 string, safe for NUL terminated C strings.
-func (uc *UidCounter) Next() string {
-	return strconv.FormatUint(uc.NextInt(), 32)
+func ExampleParseURL() {
+	for _, s := range []string{
+		"amqp://username:password@host:1234/path",
+		"host:1234",
+		"host",
+		":1234",
+		"host/path",
+		"amqps://host",
+		"",
+	} {
+		u, err := ParseURL(s)
+		if err != nil {
+			fmt.Println(err)
+		} else {
+			fmt.Println(u)
+		}
+	}
+	// Output:
+	// amqp://username:password@host:1234/path
+	// amqp://host:1234
+	// amqp://host:amqp
+	// amqp://:1234
+	// amqp://host:amqp/path
+	// amqps://host:amqps
+	// proton: bad URL ""
 }

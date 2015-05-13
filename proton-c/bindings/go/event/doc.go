@@ -18,23 +18,21 @@ under the License.
 */
 
 /*
-Package proton encodes and decodes AMQP messages and data as Go types.
+Package event provides a low-level API to the proton AMQP engine.
 
-It follows the standard 'encoding' libraries pattern. The mapping between AMQP
-and Go types is described in the documentation of the Marshal and Unmarshal
-functions.
+For most tasks, consider instead package qpid.apache.org/proton/go/messaging.
+It provides a higher-level, concurrent API that is easier to use.
 
-The sub-packages 'event' and 'messaging' provide two alternative ways to write
-AMQP clients and servers. 'messaging' is easier for general purpose use. 'event'
-gives complete low-level control of the underlying proton C engine.
+The API is event based. There are two alternative styles of handler. EventHandler
+provides the core proton events. MessagingHandler provides a slighly simplified
+view of the event stream and automates some common tasks.
 
-AMQP is an open standard for inter-operable message exchange, see <http://www.amqp.org/>
+See type Pump documentation for more details of the interaction between proton
+events and goroutines.
 */
-package proton
+package event
 
 // #cgo LDFLAGS: -lqpid-proton
 import "C"
 
 // This file is just for the package comment.
-
-// FIXME aconway 2015-04-28: need to re-organize the package, it's not very intuitive.
